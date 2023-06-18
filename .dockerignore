@@ -1,0 +1,11 @@
+.git
+.docker/volume
+
+apps/front/node_modules
+apps/front/npm-debug.log
+apps/front/.next
+
+apps/back/node_modules
+apps/back/.tmp
+apps/back/.cache
+apps/back/data

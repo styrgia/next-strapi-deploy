@@ -1,0 +1,77 @@
+version: "3"
+
+volumes:
+  pg-data:
+
+services:
+
+  nginx:
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    restart: unless-stopped
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - next
+    volumes:
+      - ./nginx/${COMPOSE_PROJECT_NAME}:/etc/nginx/conf.d
+
+  next:
+    container_name: ${COMPOSE_PROJECT_NAME}_next
+    restart: unless-stopped
+    build:
+      context: $PWD/apps/front
+      dockerfile: $PWD/.docker/front/dev.Dockerfile
+    volumes:
+      - $PWD/apps/front:/app
+    expose:
+      - 3000
+    depends_on:
+      - strapi
+
+  strapi:
+    container_name: ${COMPOSE_PROJECT_NAME}_strapi
+    build:
+      context: $PWD/apps/back
+      dockerfile: $PWD/.docker/back/dev.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - "../apps/back/.env"
+    environment:
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - ../apps/back/config:/opt/app/config
+      - ../apps/back/src:/opt/app/src
+      - ../apps/back/package.json:/opt/package.json
+      - ../apps/back/yarn.lock:/opt/yarn.lock
+      - ../apps/back/.env:/opt/app/.env
+      - ../apps/back/public/uploads:/opt/app/public/uploads
+    ports:
+      - "1337:1337"
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: ${COMPOSE_PROJECT_NAME}_postgres
+    platform: linux/amd64
+    restart: unless-stopped
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - pg-data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
