@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_settings_seos",
+  "info": {
+    "displayName": "seo",
+    "icon": "rocket"
+  },
+  "options": {},
+  "attributes": {
+    "metaDescription": {
+      "type": "string"
+    },
+    "metaTitle": {
+      "type": "string"
+    }
+  }
+}
