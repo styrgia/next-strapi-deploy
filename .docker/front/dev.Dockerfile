@@ -10,10 +10,7 @@ COPY package.json package-lock.json* ./
 
 RUN npm ci
 
-COPY src ./src
-COPY public ./public
-COPY next.config.js .
-COPY tsconfig.json .
+COPY . ./
 
 ENV NEXT_TELEMETRY_DISABLED 1
 

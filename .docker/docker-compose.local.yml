@@ -25,6 +25,8 @@ services:
       dockerfile: $PWD/.docker/front/dev.Dockerfile
     volumes:
       - $PWD/apps/front:/app
+      - /app/node_modules
+      - /app/.next
     expose:
       - 3000
     depends_on:
@@ -53,9 +55,9 @@ services:
       - ../apps/back/config:/opt/app/config
       - ../apps/back/src:/opt/app/src
       - ../apps/back/package.json:/opt/package.json
-      - ../apps/back/yarn.lock:/opt/yarn.lock
       - ../apps/back/.env:/opt/app/.env
       - ../apps/back/public/uploads:/opt/app/public/uploads
+      - /opt/node_modules
     ports:
       - "1337:1337"
     depends_on:
