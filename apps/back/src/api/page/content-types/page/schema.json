@@ -23,13 +23,6 @@
       "type": "component",
       "repeatable": false,
       "component": "settings.seo"
-    },
-    "Blocks": {
-      "type": "dynamiczone",
-      "components": [
-        "blocks.hero",
-        "blocks.otzyvy"
-      ]
     }
   }
 }
